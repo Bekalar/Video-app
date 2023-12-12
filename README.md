@@ -1,2 +1,2 @@
-# Website course - video app
-<h3>Video app - using symfony</h3>
+# Website course
+<h3>Video app in symfony</h3>
