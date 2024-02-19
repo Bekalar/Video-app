@@ -2,7 +2,7 @@
 
 namespace App\Utils;
 
-use App\Utils\Abstractclass\CategoryTreeAbstract;
+use App\Utils\AbstractClasses\CategoryTreeAbstract;
 
 class CategoryTreeFrontPage extends CategoryTreeAbstract
 {

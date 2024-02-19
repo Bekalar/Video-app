@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Utils\Abstractclass;
+namespace App\Utils\AbstractClasses;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -10,24 +9,42 @@ abstract class CategoryTreeAbstract
 {
     public $categoriesArrayFromDB;
     protected static $dbconnection;
+    protected $entitymanager;
+    protected $urlgenerator;
 
     public function __construct(EntityManagerInterface $entitymanager, UrlGeneratorInterface $urlgenerator)
     {
-        // $this->entitymanager = $entitymanager;
-        // $this->urlgenerator = $urlgenerator;
-        $this->categoriesArrayFromDB = $this->getCategories($entitymanager);
+        $this->entitymanager = $entitymanager;
+        $this->urlgenerator = $urlgenerator;
+        $this->categoriesArrayFromDB = $this->getCategories();
     }
 
     abstract public function getCategoryList(array $categories_array);
 
-    private function getCategories(EntityManagerInterface $entitymanager): array
+    public function buildTree(int $parent_id = null): array
     {
-        if ($this->categoriesArrayFromDB) {
-            return $this->categoriesArrayFromDB;
+        $subcategory = [];
+        foreach ($this->categoriesArrayFromDB as $category) {
+            if ($category['parent_id'] == $parent_id) {
+                $children = $this->buildTree($category['id']);
+                if ($children) {
+                    $category['children'] = $children;
+                }
+                $subcategory[] = $category;
+            }
+        }
+        return $subcategory;
+    }
+
+    private function getCategories(): array
+    {
+        if (self::$dbconnection) {
+            return self::$dbconnection;
         } else {
+            $connection = $this->entitymanager->getConnection();
             $sql = "SELECT * FROM categories";
-            $stmt = $entitymanager->getConnection()->prepare($sql)->execute()->fetchAllAssociative();
-            return $stmt;
+            $stmt = $connection->prepare($sql)->executeQuery();
+            return self::$dbconnection = $stmt->fetchAllAssociative();
         }
     }
 }
