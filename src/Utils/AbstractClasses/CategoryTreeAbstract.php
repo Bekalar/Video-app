@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 abstract class CategoryTreeAbstract
 {
     public $categoriesArrayFromDB;
+    public $categorylist;
     protected static $dbconnection;
     protected $entitymanager;
     protected $urlgenerator;
