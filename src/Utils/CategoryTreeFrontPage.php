@@ -30,7 +30,7 @@ class CategoryTreeFrontPage extends CategoryTreeAbstract
             $this->slugger = new AppExtensionRuntime;
             $catName = $this->slugger->slugify($value['name']);
             $url = $this->urlgenerator->generate('video_list', ['categoryname' => $catName, 'id' => $value['id']]);
-            $this->categorylist .= '<li>' . '<a href="' . $url . '">' . $catName . '</a>';
+            $this->categorylist .= '<li>' . '<a href="' . $url . '">' . $value['name'] . '</a>';
             if (!empty($value['children'])) {
                 $this->getCategoryList($value['children']);
             }
