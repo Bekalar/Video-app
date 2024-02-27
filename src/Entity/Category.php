@@ -16,10 +16,11 @@ class Category
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 45, unique:true)]
+    #[ORM\Column(length: 45, unique: true)]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'subcategories')]
+    #[ORM\JoinColumn(name: "parent_id", referencedColumnName: 'id', onDelete: "CASCADE")]
     private ?self $parent = null;
 
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
