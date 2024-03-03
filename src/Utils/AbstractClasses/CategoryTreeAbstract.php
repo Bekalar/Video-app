@@ -10,8 +10,8 @@ abstract class CategoryTreeAbstract
     public $categoriesArrayFromDB;
     public $categorylist;
     protected static $dbconnection;
-    protected $entitymanager;
-    protected $urlgenerator;
+    public $entitymanager;
+    public $urlgenerator;
 
     public function __construct(EntityManagerInterface $entitymanager, UrlGeneratorInterface $urlgenerator)
     {

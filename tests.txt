@@ -1,0 +1,4 @@
+./tests.bat
+./tests.bat tests/Twig
+./tests.bat tests
+./tests.bat tests -db
