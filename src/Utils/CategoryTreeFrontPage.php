@@ -43,13 +43,20 @@ class CategoryTreeFrontPage extends CategoryTreeAbstract
     public function getMainParent(int $id): array
     {
         $key = array_search($id, array_column($this->categoriesArrayFromDB, 'id'));
-        if ($this->categoriesArrayFromDB[$key]['parent_id'] != null) {
-            return $this->getMainParent($this->categoriesArrayFromDB[$key]['parent_id']);
+
+        // Check if key exists and is not false (indicating the ID was not found)
+        if ($key !== false) {
+            if ($this->categoriesArrayFromDB[$key]['parent_id'] !== null) {
+                return $this->getMainParent($this->categoriesArrayFromDB[$key]['parent_id']);
+            } else {
+                return [
+                    'id' => $this->categoriesArrayFromDB[$key]['id'],
+                    'name' => $this->categoriesArrayFromDB[$key]['name']
+                ];
+            }
         } else {
-            return [
-                'id' => $this->categoriesArrayFromDB[$key]['id'],
-                'name' => $this->categoriesArrayFromDB[$key]['name']
-            ];
+            // Handle the case where the ID is not found
+            return [];
         }
     }
 }

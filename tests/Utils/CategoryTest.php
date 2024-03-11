@@ -3,7 +3,10 @@
 namespace App\Tests\Utils;
 
 use App\Twig\Runtime\AppExtensionRuntime;
+use App\Utils\CategoryTreeFrontPage;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CategoryTest extends KernelTestCase
 {
@@ -18,30 +21,46 @@ class CategoryTest extends KernelTestCase
         $urlgenerator = $kernel->getContainer()->get('router');
         // $entitymanager = $kernel->getContainer()->get('doctrine.orm.entity_manager');
         // $this->obj= new \App\Utils\CategoryTreeFrontPage($entity, $urlgenerator);
-        $tested_classes = [
-            'CategoryTreeFrontPage',
-            'CategoryTreeAdminList',
-            'CategoryTreeAdminOptionList'
-        ];
+        // $tested_classes = [
+        //     'CategoryTreeFrontPage',
+        //     'CategoryTreeAdminList',
+        //     'CategoryTreeAdminOptionList'
+        // ];
 
-        foreach ($tested_classes as $class) {
-            $name = 'mocked' . $class;
+        // foreach ($tested_classes as $class) {
+        //     $name = 'mocked' . $class;
 
-            $this->$name = $this->getMockBuilder('App\Utils\\' . $class)
-                ->disableOriginalConstructor()
-                ->getMock();
-            $this->$name->urlgenerator = $urlgenerator;
-        }
+        //     $this->$name = $this->getMockBuilder('App\Utils\\' . $class)
+        //         ->disableOriginalConstructor()
+        //         ->getMock();
+        //     $this->$name->urlgenerator = $urlgenerator;
+        // }
+
+        $this->mockedCategoryTreeFrontPage = $this->getMockBuilder(CategoryTreeFrontPage::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->mockedCategoryTreeFrontPage->urlgenerator = $urlgenerator;
+
+        var_dump("Mocked Category Tree Front Page: ", $this->mockedCategoryTreeFrontPage);
     }
 
     /**
      * @dataProvider dataForCategoryTreeFrontPage
      */
+    // #[DataProvider('dataForCategoryTreeFrontPage')]
     public function testCategoryTreeFrontPage($string, $array, $id)
     {
         $this->mockedCategoryTreeFrontPage->categoriesArrayFromDB = $array;
         $this->mockedCategoryTreeFrontPage->slugger = new AppExtensionRuntime;
+
+        var_dump("ID: " . $id);
+        var_dump("Array: ", $array);
+
         $main_parent_id = $this->mockedCategoryTreeFrontPage->getMainParent($id)['id'];
+
+        var_dump("Main Parent: ", $main_parent_id);
+
         $array = $this->mockedCategoryTreeFrontPage->buildTree($main_parent_id);
         $this->assertSame($string, $this->mockedCategoryTreeFrontPage->getCategoryList($array));
     }
