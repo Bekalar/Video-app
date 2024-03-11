@@ -24,14 +24,43 @@ class VideoRepository extends ServiceEntityRepository
         parent::__construct($registry, Video::class);
     }
 
-    public function findByChildIds(array $value, int $page, PaginatorInterface $paginator)
+    public function findByChildIds(array $value, int $page, PaginatorInterface $paginator, ?string $sort_method)
     {
+        $sort_method = $sort_method != 'rating' ? $sort_method : 'ASC';
         $dbquery = $this->createQueryBuilder('v')
             ->andWhere('v.category IN (:val)')
             ->setParameter('val', $value)
+            ->orderBy('v.title', $sort_method)
             ->getQuery();
         $pagination = $paginator->paginate($dbquery, $page, 5);
         return $pagination;
+    }
+
+    public function findByTitle(string $query, int $page, PaginatorInterface $paginator, ?string $sort_method,)
+    {
+        $sort_method = $sort_method != 'rating' ? $sort_method : 'ASC';
+
+        $querybuilder = $this->createQueryBuilder('v');
+        $searchTerms = $this->prepareQuery($query);
+        // $searchTerms = $this->getEntityManager()->getConnection();
+        // $values = $searchTerms->prepare($query);
+
+        foreach ($searchTerms as $key => $term) {
+            $querybuilder
+                ->orWhere('v.title LIKE :t_' . $key)
+                ->setParameter('t_' . $key, '%' . trim($term) . '%');
+        }
+
+        $dbquery = $querybuilder
+            ->addOrderBy('v.title', $sort_method)
+            ->getQuery();
+
+        return $paginator->paginate($dbquery, $page, 5);
+    }
+
+    private function prepareQuery(string $query): array
+    {
+        return explode(' ', $query);
     }
 
     //    /**
