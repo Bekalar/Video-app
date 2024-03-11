@@ -6,8 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Category;
+use App\Entity\Video;
 use App\Utils\CategoryTreeFrontPage;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class FrontController extends AbstractController
 {
@@ -17,12 +19,17 @@ class FrontController extends AbstractController
         return $this->render('front/index.html.twig');
     }
 
-    #[Route('/video-list/category/{categoryname},{id}', name: 'video_list')]
-    public function videoList($id, CategoryTreeFrontPage $categories): Response
+    #[Route('/video-list/category/{categoryname},{id}/{page}', defaults: ['page' => 1], name: 'video_list')]
+    public function videoList($id, $page, CategoryTreeFrontPage $categories, EntityManagerInterface $manager, PaginatorInterface $paginator): Response
     {
         $categories->getCategoryListAndParent($id);
-        dump($categories);
-        return $this->render('front/video_list.html.twig', ['subcategories' => $categories]);
+        $ids = $categories->getChildIds($id);
+        array_push($ids, $id);
+        $videos = $manager->getRepository(Video::class)->findByChildIds($ids, $page, $paginator);
+        return $this->render('front/video_list.html.twig', [
+            'subcategories' => $categories,
+            'videos' => $videos
+        ]);
     }
 
     #[Route('/video-details', name: 'video_details')]
