@@ -6,7 +6,11 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
+#[ORM\Table(name: "users")]
+#[UniqueEntity("email")]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -15,6 +19,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message : "Please enter a valid email address")]
+    #[Assert\Email()]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -24,8 +30,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
+    #[Assert\NotBlank(message: "Please enter a valid password")]
+    #[Assert\Length(max: 4096)]
     #[ORM\Column]
     private ?string $password = null;
+
+    #[Assert\NotBlank(message: "Valid first name is required.")]
+    #[ORM\Column(length: 45)]
+    private ?string $name = null;
+
+    #[Assert\NotBlank(message: "Valid last name is required.")]
+    #[ORM\Column(length: 45)]
+    private ?string $last_name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $vimeo_api_key = null;
 
     public function getId(): ?int
     {
@@ -95,5 +114,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->last_name;
+    }
+
+    public function setLastName(string $last_name): static
+    {
+        $this->last_name = $last_name;
+
+        return $this;
+    }
+
+    public function getVimeoApiKey(): ?string
+    {
+        return $this->vimeo_api_key;
+    }
+
+    public function setVimeoApiKey(?string $vimeo_api_key): static
+    {
+        $this->vimeo_api_key = $vimeo_api_key;
+
+        return $this;
     }
 }
