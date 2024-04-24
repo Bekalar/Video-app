@@ -11,6 +11,7 @@ use App\Utils\CategoryTreeFrontPage;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class FrontController extends AbstractController
 {
@@ -70,9 +71,17 @@ class FrontController extends AbstractController
     }
 
     #[Route('/login', name: 'login')]
-    public function login(): Response
+    public function login(AuthenticationUtils $helper): Response
     {
-        return $this->render('front/login.html.twig');
+        return $this->render('front/login.html.twig', [
+            'error' => $helper->getLastAuthenticationError()
+        ]);
+    }
+
+    #[Route('/logout', name: 'logout')]
+    public function logout(AuthenticationUtils $helper): Response
+    {
+        throw new \Exception('This should never be reached!');
     }
 
     #[Route('/payment', name: 'payment')]
@@ -86,4 +95,5 @@ class FrontController extends AbstractController
         $categories = $manager->getRepository(Category::class)->findBy(['parent' => null], ['name' => 'ASC']);
         return $this->render('front/_main_categories.html.twig', ['categories' => $categories]);
     }
+
 }
