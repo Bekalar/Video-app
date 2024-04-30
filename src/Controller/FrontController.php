@@ -2,15 +2,15 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Category;
 use App\Entity\Video;
+use App\Entity\Category;
 use App\Utils\CategoryTreeFrontPage;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class FrontController extends AbstractController
@@ -64,12 +64,6 @@ class FrontController extends AbstractController
         return $this->render('front/pricing.html.twig');
     }
 
-    #[Route('/register', name: 'register')]
-    public function register(): Response
-    {
-        return $this->render('front/register.html.twig');
-    }
-
     #[Route('/login', name: 'login')]
     public function login(AuthenticationUtils $helper): Response
     {
@@ -95,5 +89,4 @@ class FrontController extends AbstractController
         $categories = $manager->getRepository(Category::class)->findBy(['parent' => null], ['name' => 'ASC']);
         return $this->render('front/_main_categories.html.twig', ['categories' => $categories]);
     }
-
 }
