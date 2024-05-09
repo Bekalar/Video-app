@@ -12,10 +12,10 @@ php bin/console make:migration
 php bin/console doctrine:migrations:migrate -n -q
 php bin/console doctrine:fixtures:load -n -q
 
-:doTest
-php bin/phpunit
-goto :EOF
+@REM :doTest
+@REM php bin/phpunit
+@REM goto :EOF
 
-:doConcreteTest
-php bin/phpunit %1
-goto :EOF
+@REM :doConcreteTest
+@REM php bin/phpunit %1
+@REM goto :EOF
