@@ -38,6 +38,10 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
             ['Comment 4 something to text.', 2, 11, '2023-09-04 4:40:02'],
             ['Comment 5 something to text.', 3, 11, '2021-12-13 21:45:45'],
             ['Comment 6 something to text.', 1, 8, '2022-01-10 11:40:03'],
+            ['Comment 7 something to text.', 1, 8, '2022-01-10 11:40:03'],
+            ['Comment 7 something to text.', 3, 8, '2022-01-16 12:46:03'],
+            ['Comment 8 something to text.', 1, 7, '2022-01-16 11:45:07'],
+            ['Comment 9 something to text.', 1, 5, '2022-01-23 11:46:06'],
         ];
     }
 

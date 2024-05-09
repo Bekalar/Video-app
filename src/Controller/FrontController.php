@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Video;
 use App\Entity\Category;
+use App\Entity\Comment;
+use App\Repository\VideoRepository;
 use App\Utils\CategoryTreeFrontPage;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -35,10 +37,12 @@ class FrontController extends AbstractController
         ]);
     }
 
-    #[Route('/video-details', name: 'video_details')]
-    public function videoDetails(): Response
+    #[Route('/video-details/{video}', name: 'video_details')]
+    public function videoDetails(VideoRepository $repository, $video): Response
     {
-        return $this->render('front/video_details.html.twig');
+        return $this->render('front/video_details.html.twig', [
+            'video' => $repository->videoDetails($video)
+        ]);
     }
 
     #[Route('/search-results/{page}', methods: ['GET'], defaults: ['page' => 1], name: 'search_results')]
@@ -82,6 +86,24 @@ class FrontController extends AbstractController
     public function payment(): Response
     {
         return $this->render('front/payment.html.twig');
+    }
+
+    #[Route('/new-comment/{video}', methods: ['POST'], name: 'new_comment')]
+    public function newComment(Video $video, Request $request, EntityManagerInterface $manager)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
+        if (!empty(trim($request->request->get('comment')))) {
+            $comment = new Comment();
+            $comment->setContent($request->request->get('comment'));
+            $comment->setUser($this->getUser());
+            $comment->setVideo($video);
+
+            $manager->persist($comment);
+            $manager->flush();
+        }
+        
+
+        return $this->redirectToRoute('video_details', ['video' => $video->getId()]);
     }
 
     public function mainCategories(EntityManagerInterface $manager)

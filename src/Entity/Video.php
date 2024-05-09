@@ -34,6 +34,9 @@ class Video
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'video')]
     private Collection $comments;
 
+    public const videoForNotLoggedIn = 113716040; // vimeo id
+    public const VimeoPath = 'https://player.vimeo.com/video/';
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -59,6 +62,15 @@ class Video
     public function getPath(): ?string
     {
         return $this->path;
+    }
+
+    public function getVimeoId($user): ?string
+    {
+        if($user)
+        {
+            return $this->path;
+        }
+        else return self::VimeoPath.self::videoForNotLoggedIn;
     }
 
     public function setPath(string $path): static
