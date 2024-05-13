@@ -49,11 +49,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $vimeo_api_key = null;
 
     #[ORM\ManyToMany(targetEntity: Video::class, mappedBy: 'usersThatLike')]
-    // #[ORM\JoinTable(name: 'likes')]
+    // #[ORM\JoinTable('likes')]
     private Collection $likedVideos;
 
     #[ORM\ManyToMany(targetEntity: Video::class, mappedBy: 'usersThatDontLike')]
-    // #[ORM\JoinTable(name: 'dislikes')]
+    // #[ORM\JoinTable('dislikes')]
     private Collection $dislikedVideos;
 
     public function __construct()

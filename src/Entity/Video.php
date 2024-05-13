@@ -35,11 +35,11 @@ class Video
     private Collection $comments;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'likedVideos')]
-    // #[ORM\JoinTable(name: 'likes')]
+    #[ORM\JoinTable('likes')]
     private Collection $usersThatLike;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'dislikedVideos')]
-    // #[ORM\JoinTable(name: 'dislikes')]
+    #[ORM\JoinTable('dislikes')]
     private Collection $usersThatDontLike;
 
     public const videoForNotLoggedIn = 113716040; // vimeo id

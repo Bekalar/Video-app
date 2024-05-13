@@ -112,6 +112,9 @@ class VideoFixtures extends Fixture
             [9,1],
             [9,2],
 
+            [11,1],
+            [11,2],
+
         ];
     }
 }
