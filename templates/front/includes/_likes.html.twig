@@ -6,7 +6,7 @@
 	{% set noActionYet = 'noActionYet' %}
 {% endif %}
 
-<button data-toggle="tooltip" data-placement="top" title="Click to like the video" type="button" class="btn btn-primary btn-outline-success btn-sm ml-1 video-id-{{video.id}}  click-to-like-video {{noActionYet|default(null)}}">
+<button data-toggle="tooltip" data-placement="top" title="Click to like the video" type="button" class="btn btn-primary btn-outline-success btn-sm ml-1 video-id-{{video.id}} click-to-like-video {{noActionYet|default(null)}}">
 	<i href="{{path('like_video',{'video':video.id})}}" class="fa fa-thumbs-up toogle-likes"></i>
 </button>
 
@@ -14,7 +14,7 @@
 	<i href="{{path('undo_like_video',{'video':video.id})}}" class="fa fa-thumbs-up toogle-likes"></i>
 </button>
 
-<button data-toggle="tooltip" data-placement="top" title="Click to dislike the video" type="button" class="btn btn-primary btn-outline-danger btn-sm ml-1 mr-1 video-id-{{video.id}}  click-to-dislike-video {{noActionYet|default(null)}}">
+<button data-toggle="tooltip" data-placement="top" title="Click to dislike the video" type="button" class="btn btn-primary btn-outline-danger btn-sm ml-1 mr-1 video-id-{{video.id}} click-to-dislike-video {{noActionYet|default(null)}}">
 	<i href="{{path('dislike_video',{'video':video.id})}}" class="fa fa-thumbs-down toogle-likes"></i>
 </button>
 
